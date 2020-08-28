@@ -1,4 +1,4 @@
-# SPITBOL makefile using nasm
+# SPITBOL makefile using gnu as
 
 ws?=64
 
@@ -22,7 +22,7 @@ endif
 
 # Assembler info 
 # Assembler
-ASM=nasm
+ASM=as
 ifeq	($(DEBUG),0)
 ASMFLAGS = -f $(ELF) -d m64
 else

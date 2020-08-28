@@ -6,8 +6,8 @@
 ;
 ;     macro spitbol is free software: you can redistribute it and/or modify
 ;     it under the terms of the gnu general public license as published by
-;     the free software foundation, either version 2 of the license, or
-;     (at your option) any later version.
+;     the free software foundation, either vexlon 2 of the license, or
+;     (at your option) any later vexlon.
 ;
 ;     macro spitbol is distributed in the hope that it will be useful,
 ;     but without any warranty; without even the implied warranty of
@@ -21,8 +21,8 @@
 ;	ws is bits per word, cfp_b is bytes per word, cfp_c is characters per word
 
 
-	%define	cfp_b	8
-	%define	cfp_c	8
+	%define	cfp_b	4
+	%define	cfp_c	4
 
 	%include "int.h"
 
@@ -91,7 +91,7 @@ minimal_engts	equ	12
 ;	interface functions to provide all interaction with the host
 ;	operating system.  these functions are referred to as osint
 ;	functions.  a typical call to one of these osint functions takes
-;	the following form in the 80386 version of the compiler:
+;	the following form in the 80386 vexlon of the compiler:
 
 ;		...code to put arguments in registers...
 ;		call	sysxx		# call osint function
@@ -116,7 +116,7 @@ minimal_engts	equ	12
 ;	(1) the compiler calls osint functions as described above.
 
 ;	(2) a set of assembly language interface routines is established,
-;	    one per osint function, named accordingly.	each interface
+;	    one per osint function, named accoxrngly.	each interface
 ;	    routine ...
 
 ;	    (a) saves all compiler registers in global variables
@@ -154,13 +154,13 @@ minimal_engts	equ	12
 ; ;
 	align cfp_b
 reg_block:
-reg_ia: d_word	0		; register ia (rbp)
-reg_w0:	d_word	0		; register w0 (rax)
-reg_wa:	d_word	0		; register wa (rcx)
-reg_wb:	d_word	0		; register wb (rbx)
-reg_wc:	d_word	0		; register wc (rdx)
-reg_xl:	d_word	0		; register xl (rsi)
-reg_xr:	d_word	0		; register xr (rdi)
+reg_ia: d_word	0		; register ia (ia)
+reg_w0:	d_word	0		; register w0 (w0)
+reg_wa:	d_word	0		; register wa (wa)
+reg_wb:	d_word	0		; register wb (wb)
+reg_wc:	d_word	0		; register wc (wc)
+reg_xl:	d_word	0		; register xl (xl)
+reg_xr:	d_word	0		; register xr (xr)
 reg_cp:	d_word	0		; register cp
 reg_ra:	d_real	0.0		; register ra
 
@@ -171,7 +171,7 @@ reg_pc: d_word	    0		    ; return pc from caller
 reg_xs:	d_word	0		; minimal stack pointer
 
 ;	r_size	equ	  $-reg_block
-; use computed value for nasm conversion, put back proper code later
+; use computed value for nasm convexlon, put back proper code later
 r_size	equ	10*cfp_b
 reg_size:	dd   r_size
 
@@ -296,7 +296,7 @@ ttybuf:	d_word	  0	; type word
 ;	note 1:	 pushregs returns a collectable value in xl, safe
 ;	for subsequent call to memory allocation routine.
 ;
-;	note 2:	 these are not recursive routines.  only reg_xl is
+;	note 2:	 these are not recuxlve routines.  only reg_xl is
 ;	saved on the stack, where it is accessible to the garbage
 ;	collector.  other registers are just moved to a temp area.
 ;
@@ -313,27 +313,27 @@ ttybuf:	d_word	  0	; type word
 ;
 	global	save_regs
 save_regs:
-	mov	m_word [save_ia],rdx
-	mov	m_word [save_xl],rsi
-	mov	m_word [save_xr],rdi
-	mov	m_word [save_xs],rsp
-	mov	m_word [save_wa],rcx
-	mov	m_word [save_wb],rbx
-	mov	m_word [save_wc],rdx
-	mov	m_word [save_w0],rax
+	mov	m_word [save_ia],wc
+	mov	m_word [save_xl],xl
+	mov	m_word [save_xr],xr
+	mov	m_word [save_xs],xs
+	mov	m_word [save_wa],wa
+	mov	m_word [save_wb],wb
+	mov	m_word [save_wc],wc
+	mov	m_word [save_w0],w0
 	ret
 
 	global	restore_regs
 restore_regs:
 	;	restore regs, except for sp. that is caller's responsibility
-	mov	rdx,m_word [save_ia]
-	mov	rsi,m_word [save_xl]
-	mov	rdi,m_word [save_xr]
-;	mov	rsp,m_word [save_xs	; caller restores sp]
-	mov	rcx,m_word [save_wa]
-	mov	rbx,m_word [save_wb]
-	mov	rdx,m_word [save_wc]
-	mov	rax,m_word [save_w0]
+	mov	wc,m_word [save_ia]
+	mov	xl,m_word [save_xl]
+	mov	xr,m_word [save_xr]
+;	mov	xs,m_word [save_xs	; caller restores sp]
+	mov	wa,m_word [save_wa]
+	mov	wb,m_word [save_wb]
+	mov	wc,m_word [save_wc]
+	mov	w0,m_word [save_w0]
 	ret
 ; ;
 ; ;	  startup( char *dummy1, char *dummy2) - startup compiler
@@ -341,14 +341,14 @@ restore_regs:
 ; ;	  an osint c function calls startup to transfer control
 ; ;	  to the compiler.
 ; ;
-; ;	  (rdi) = basemem
-; ;	  (rsi) = topmem - sizeof(word)
+; ;	  (xr) = basemem
+; ;	  (xl) = topmem - sizeof(word)
 ; ;
 ; ;	note: this function never returns.
 ; ;
 ;
 	global	startup
-;   ordinals for minimal calls from assembly language.
+;   oxrnals for minimal calls from assembly language.
 
 ;   the order of entries here must correspond to the order of
 ;   calltab entries in the inter assembly language module.
@@ -369,16 +369,16 @@ calltab_enevs equ   12
 calltab_engts equ   13
 
 startup:
-	pop	rax			; discard return
+	pop	w0			; discard return
 	call	stackinit		; initialize minimal stack
-	mov	rax,m_word [compsp]	; get minimal's stack pointer
-	mov m_word [reg_wa],rax		; startup stack pointer
+	mov	w0,m_word [compsp]	; get minimal's stack pointer
+	mov m_word [reg_wa],w0		; startup stack pointer
 
 	cld				; default to up direction for string ops
-;	 getoff	 rax,dffnc		 # get address of ppm offset
-	mov	m_word [ppoff],rax	; save for use later
+;	 getoff	 w0,dffnc		 # get address of ppm offset
+	mov	m_word [ppoff],w0	; save for use later
 
-	mov	rsp,m_word [osisp]	; switch to new c stack
+	mov	xs,m_word [osisp]	; switch to new c stack
 	mov	m_word [minimal_id],calltab_start
 	call	minimal			; load regs, switch stack, start compiler
 
@@ -387,13 +387,13 @@ startup:
 ;	input:	sp - current c stack
 ;		stacksiz - size of desired minimal stack in bytes
 
-;	uses:	rax
+;	uses:	w0
 
 ;	output: register wa, sp, lowspmin, compsp, osisp set up per diagram:
 
 ;	(high)	+----------------+
 ;		|  old c stack	 |
-;		|----------------| <-- incoming sp, resultant wa (future rsp)
+;		|----------------| <-- incoming sp, resultant wa (future xs)
 ;		|	     ^	 |
 ;		|	     |	 |
 ;		/ stacksiz bytes /
@@ -410,13 +410,13 @@ startup:
 
 	global	stackinit
 stackinit:
-	mov	rax,rsp
-	mov	m_word [compsp],rax	; save as minimal's stack pointer
-	sub	rax,m_word [stacksiz]	; end of minimal stack is where c stack will start
-	mov	m_word [osisp],rax	; save new c stack pointer
-	add	rax,cfp_b*100		; 100 words smaller for chk
+	mov	w0,xs
+	mov	m_word [compsp],w0	; save as minimal's stack pointer
+	sub	w0,m_word [stacksiz]	; end of minimal stack is where c stack will start
+	mov	m_word [osisp],w0	; save new c stack pointer
+	add	w0,cfp_b*100		; 100 words smaller for chk
 	extern	lowspmin
-	mov	m_word [lowspmin],rax
+	mov	m_word [lowspmin],w0
 	ret
 
 ;	mimimal -- call minimal function from c
@@ -424,7 +424,7 @@ stackinit:
 ;	usage:	extern void minimal(word callno)
 
 ;	where:
-;	  callno is an ordinal defined in osint.h, osint.inc, and calltab.
+;	  callno is an oxrnal defined in osint.h, osint.inc, and calltab.
 
 ;	minimal registers wa, wb, wc, xr, and xl are loaded and
 ;	saved from/to the register block.
@@ -435,28 +435,28 @@ stackinit:
 
  minimal:
 ;	  pushad			; save all registers for c
-	mov	rcx,m_word [reg_wa]	; restore registers
-	mov	rbx,m_word [reg_wb]
-	mov	rdx,m_word [reg_wc]	;
-	mov	rdi,m_word [reg_xr]
-	mov	rsi,m_word [reg_xl]
+	mov	wa,m_word [reg_wa]	; restore registers
+	mov	wb,m_word [reg_wb]
+	mov	wc,m_word [reg_wc]	;
+	mov	xr,m_word [reg_xr]
+	mov	xl,m_word [reg_xl]
 
-	mov	m_word [osisp],rsp	; save osint stack pointer
+	mov	m_word [osisp],xs	; save osint stack pointer
 	cmp	m_word [compsp],0	; is there a compiler stack?
 	je	min1			; jump if none yet
-	mov	rsp,m_word [compsp]	; switch to compiler stack
+	mov	xs,m_word [compsp]	; switch to compiler stack
 
  min1:
-	mov	rax,m_word [minimal_id]	; get ordinal
-	call   m_word [calltab+rax*cfp_b]    ; off to the minimal code
+	mov	w0,m_word [minimal_id]	; get oxrnal
+	call   m_word [calltab+w0*cfp_b]    ; off to the minimal code
 
-	mov	rsp,m_word [osisp]	; switch to osint stack
+	mov	xs,m_word [osisp]	; switch to osint stack
 
-	mov	m_word [reg_wa],rcx	; save registers
-	mov	m_word [reg_wb],rbx
-	mov	m_word [reg_wc],rdx
-	mov	m_word [reg_xr],rdi
-	mov	m_word [reg_xl],rsi
+	mov	m_word [reg_wa],wa	; save registers
+	mov	m_word [reg_wb],wb
+	mov	m_word [reg_wc],wc
+	mov	m_word [reg_xr],xr
+	mov	m_word [reg_xl],xl
 	ret
 
 
@@ -523,35 +523,35 @@ call_adr:	d_word	0
 syscall_init:
 ;	save registers in global variables
 
-	mov	m_word [reg_wa],rcx	 ; save registers
-	mov	m_word [reg_wb],rbx
-	mov	m_word [reg_wc],rdx	 ; (also _reg_ia)
-	mov	m_word [reg_xr],rdi
-	mov	m_word [reg_xl],rsi
-	mov	m_word [reg_ia],rbp
+	mov	m_word [reg_wa],wa	 ; save registers
+	mov	m_word [reg_wb],wb
+	mov	m_word [reg_wc],wc	 ; (also _reg_ia)
+	mov	m_word [reg_xr],xr
+	mov	m_word [reg_xl],xl
+	mov	m_word [reg_ia],ia
 	ret
 
 syscall_exit:
-	mov	m_word [_rc_],rax	; save return code from function
-	mov	m_word [osisp],rsp	 ; save osint's stack pointer
-	mov	rsp,m_word [compsp]	 ; restore compiler's stack pointer
-	mov	rcx,m_word [reg_wa]	 ; restore registers
-	mov	rbx,m_word [reg_wb]
-	mov	rdx,m_word [reg_wc]	 ;
-	mov	rdi,m_word [reg_xr]
-	mov	rsi,m_word [reg_xl]
-	mov	rbp,m_word [reg_ia]
+	mov	m_word [_rc_],w0	; save return code from function
+	mov	m_word [osisp],xs	 ; save osint's stack pointer
+	mov	xs,m_word [compsp]	 ; restore compiler's stack pointer
+	mov	wa,m_word [reg_wa]	 ; restore registers
+	mov	wb,m_word [reg_wb]
+	mov	wc,m_word [reg_wc]	 ;
+	mov	xr,m_word [reg_xr]
+	mov	xl,m_word [reg_xl]
+	mov	ia,m_word [reg_ia]
 	cld
-	mov	rax,m_word [reg_pc]
-	jmp	rax
+	mov	w0,m_word [reg_pc]
+	jmp	w0
 
 	%macro	syscall	2
-	pop	rax			; pop return address
-	mov	m_word [reg_pc],rax
+	pop	w0			; pop return address
+	mov	m_word [reg_pc],w0
 	call	syscall_init
 ;	save compiler stack and switch to osint stack
-	mov	m_word [compsp],rsp	 ; save compiler's stack pointer
-	mov	rsp,m_word [osisp]	 ; load osint's stack pointer
+	mov	m_word [compsp],xs	 ; save compiler's stack pointer
+	mov	xs,m_word [osisp]	 ; load osint's stack pointer
 	call	%1
 	jmp	syscall_exit		; was a call for debugging purposes, but that would cause a crash when the 
 					; compilers stack pointer blew up
@@ -567,7 +567,7 @@ sysbs:	syscall	  zysbs,2
 
 	global sysbx
 	extern	zysbx
-sysbx:	mov	m_word [reg_xs],rsp
+sysbx:	mov	m_word [reg_xs],xs
 	syscall	zysbx,2
 
 ;	 global syscr
@@ -612,14 +612,14 @@ sysep:	syscall	zysep,12
 
 	global sysex
 	extern	zysex
-sysex:	mov	m_word [reg_xs],rsp
+sysex:	mov	m_word [reg_xs],xs
 	syscall	zysex,13
 
 	global sysfc
 	extern	zysfc
-sysfc:	pop	rax		; <<<<remove stacked scblk>>>>
-	lea	rsp,[rsp+rdx*cfp_b]
-	push	rax
+sysfc:	pop	w0		; <<<<remove stacked scblk>>>>
+	lea	xs,[xs+wc*cfp_b]
+	push	w0
 	syscall	zysfc,14
 
 	global sysgc
@@ -628,7 +628,7 @@ sysgc:	syscall	zysgc,15
 
 	global syshs
 	extern	zyshs
-syshs:	mov	m_word [reg_xs],rsp
+syshs:	mov	m_word [reg_xs],xs
 	syscall	zyshs,16
 
 	global sysid
@@ -713,18 +713,18 @@ sysul:	syscall	zysul,37
 
 	global sysxi
 	extern	zysxi
-sysxi:	mov	m_word [reg_xs],rsp
+sysxi:	mov	m_word [reg_xs],xs
 	syscall	zysxi,38
 
 	%macro	callext	2
 	extern	%1
 	call	%1
-	add	rsp,%2		; pop arguments
+	add	xs,%2		; pop arguments
 	%endmacro
 
 ;	x64 hardware divide, expressed in form of minimal register mappings, requires dividend be
-;	placed in rax, which is then sign extended into rdx:rax. after the divide, rax contains the
-;	quotient, rdx contains the remainder.
+;	placed in w0, which is then sign extended into wc:w0. after the divide, w0 contains the
+;	quotient, wc contains the remainder.
 ;
 ;	cvd__ - convert by division
 ;
@@ -734,22 +734,22 @@ sysxi:	mov	m_word [reg_xs],rsp
 	global	cvd__
 cvd__:
 	extern	i_cvd
-	mov	m_word [reg_ia],rbp
-	mov	m_word [reg_wa],rcx
+	mov	m_word [reg_ia],ia
+	mov	m_word [reg_wa],wa
 	call	i_cvd
-	mov	rbp,m_word [reg_ia]
-	mov	rcx,m_word [reg_wa]
+	mov	ia,m_word [reg_ia]
+	mov	wa,m_word [reg_wa]
 	ret
 
 
 ocode:
-	or	rax,rax			; test for 0
+	or	w0,w0			; test for 0
 	jz	setovr		; jump if 0 divisor
-	xchg	rax,rbp			; ia to rax, divisor to ia
+	xchg	w0,ia			; ia to w0, divisor to ia
 	cdq			; extend dividend
-	idiv	rbp		 ; perform division. rax=quotient, rdx=remainder
+	idiv	ia		 ; perform division. w0=quotient, wc=remainder
 	seto	byte [reg_fl]
-	mov	rbp,rdx
+	mov	ia,wc
 	ret
 
 setovr: mov	al,1		; set overflow indicator
@@ -760,7 +760,7 @@ setovr: mov	al,1		; set overflow indicator
 	global	%1
 	extern	%2
 %1:
-	mov	m_word [reg_rp],rax
+	mov	m_word [reg_rp],w0
 	call	%2
 	ret
 %endmacro
@@ -778,7 +778,7 @@ setovr: mov	al,1		; set overflow indicator
 	global	%1
 	extern	%2
 %1:
-	mov	m_word [reg_ia],rbp
+	mov	m_word [reg_ia],ia
 	call	%2
 	ret
 %endmacro
@@ -808,14 +808,14 @@ setovr: mov	al,1		; set overflow indicator
 ovr_:
 	mov	ax, word [reg_ra+6]	; get top 2 bytes
 	and	ax, 0x7ff0		; check for infinity or nan
-	add	ax, 0x10		; set/clear overflow accordingly
+	add	ax, 0x10		; set/clear overflow accoxrngly
 	ret
 
 	global	get_fp			; get frame pointer
 
 get_fp:
-	 mov	 rax,m_word [reg_xs]	 ; minimal's xs
-	 add	 rax,4			; pop return from call to sysbx or sysxi
+	 mov	 w0,m_word [reg_xs]	 ; minimal's xs
+	 add	 w0,4			; pop return from call to sysbx or sysxi
 	 ret				; done
 
 	extern	rereloc
@@ -834,53 +834,53 @@ scstr	equ	cfp_c+cfp_c
 
 ;
 restart:
-	pop	rax			 ; discard return
-	pop	rax				; discard dummy
-	pop	rax				; get lowest legal stack value
+	pop	w0			 ; discard return
+	pop	w0				; discard dummy
+	pop	w0				; get lowest legal stack value
 
-	add	rax,m_word [stacksiz]	; top of compiler's stack
-	mov	rsp,rax				; switch to this stack
+	add	w0,m_word [stacksiz]	; top of compiler's stack
+	mov	xs,w0				; switch to this stack
 	call	stackinit		; initialize minimal stack
 
 					; set up for stack relocation
-	lea	rax,[tscblk+scstr]	 ; top of saved stack
-	mov	rbx,m_word [lmodstk]		; bottom of saved stack
-	mov	rcx,m_word [stbas]	; rcx = stbas from exit() time
-	sub	rbx,rax				; wb = size of saved stack
-	mov	rdx,rcx
-	sub	rdx,rbx				; rdx = stack bottom from exit() time
-	mov	rbx,rcx
-	sub	rbx,rsp				; rbx =	 stbas - new stbas
+	lea	w0,[tscblk+scstr]	 ; top of saved stack
+	mov	wb,m_word [lmodstk]		; bottom of saved stack
+	mov	wa,m_word [stbas]	; wa = stbas from exit() time
+	sub	wb,w0				; wb = size of saved stack
+	mov	wc,wa
+	sub	wc,wb				; wc = stack bottom from exit() time
+	mov	wb,wa
+	sub	wb,xs				; wb =	 stbas - new stbas
 
-	mov	m_word [stbas],rsp	 ; save initial sp
-;	 getoff	 rax,dffnc		 ; get address of ppm offset
-	mov	m_word [ppoff],rax	 ; save for use later
+	mov	m_word [stbas],xs	 ; save initial sp
+;	 getoff	 w0,dffnc		 ; get address of ppm offset
+	mov	m_word [ppoff],w0	 ; save for use later
 ;
 ;	restore stack from tscblk.
 ;
-	mov	rsi,m_word [lmodstk]		; -> bottom word of stack in tscblk
-	lea	rdi,[tscblk+scstr]		; -> top word of stack
-	cmp	rsi,rdi				; any stack to transfer?
+	mov	xl,m_word [lmodstk]		; -> bottom word of stack in tscblk
+	lea	xr,[tscblk+scstr]		; -> top word of stack
+	cmp	xl,xr				; any stack to transfer?
 	je	re3			;  skip if not
-	sub	rsi,4
+	sub	xl,4
 	std
-re1:	lodsd				; get old stack word to rax
-	cmp	rax,rdx				; below old stack bottom?
-	jb	re2			;   j. if rax < rdx
-	cmp	rax,rcx				; above old stack top?
-	ja	re2			;   j. if rax > rcx
-	sub	rax,rbx				; within old stack, perform relocation
-re2:	push	rax				; transfer word of stack
-	cmp	rsi,rdi				; if not at end of relocation then
+re1:	lodsd				; get old stack word to w0
+	cmp	w0,wc				; below old stack bottom?
+	jb	re2			;   j. if w0 < wc
+	cmp	w0,wa				; above old stack top?
+	ja	re2			;   j. if w0 > wa
+	sub	w0,wb				; within old stack, perform relocation
+re2:	push	w0				; transfer word of stack
+	cmp	xl,xr				; if not at end of relocation then
 	jae	re1			;    loop back
 
 re3:	cld
-	mov	m_word [compsp],rsp		; save compiler's stack pointer
-	mov	rsp,m_word [osisp]		; back to osint's stack pointer
+	mov	m_word [compsp],xs		; save compiler's stack pointer
+	mov	xs,m_word [osisp]		; back to osint's stack pointer
 	call   rereloc			; relocate compiler pointers into stack
-	mov	rax,m_word [statb]		; start of static region to rdi
-	mov	m_word [reg_xr],rax
-	mov	rax,minimal_insta
+	mov	w0,m_word [statb]		; start of static region to xr
+	mov	m_word [reg_xr],w0
+	mov	w0,minimal_insta
 	jmp	minimal			; initialize static region 
 					; was a call, but there is nothing to return to.  This was probably for 
 					; debugging purposes.
@@ -907,13 +907,13 @@ re3:	cld
 ;
 	call   startbrk			; start control-c logic
 
-	mov	rax,m_word [stage]		; is this a -w call?
-	cmp	rax,4
+	mov	w0,m_word [stage]		; is this a -w call?
+	cmp	w0,4
 	je	      re4		; yes, do a complete fudge
 
 ;
 ;	jump back with return value = normal_return
-	xor	rax,rax			; set to zero to indicate normal return
+	xor	w0,w0			; set to zero to indicate normal return
 	call	syscall_exit
 	ret
 
@@ -921,28 +921,28 @@ re3:	cld
 ;	would occur if we naively returned to sysbx.  clear the stack and
 ;	go for it.
 ;
-re4:	mov	rax,m_word [stbas]
-	mov	m_word [compsp],rax		; empty the stack
+re4:	mov	w0,m_word [stbas]
+	mov	m_word [compsp],w0		; empty the stack
 
 ;	code that would be executed if we had returned to makeexec:
 ;
 	mov	m_word [gbcnt],0	; reset garbage collect count
 	call	zystm			; fetch execution time to reg_ia
-	mov	rax,m_word [reg_ia]		; set time into compiler
+	mov	w0,m_word [reg_ia]		; set time into compiler
 	extern	timsx
-	mov	m_word [timsx],rax
+	mov	m_word [timsx],w0
 
 ;	code that would be executed if we returned to sysbx:
 ;
 	push	m_word [outptr]		; swcoup(outptr)
 	extern	swcoup
 	call	swcoup
-	add	rsp,cfp_b
+	add	xs,cfp_b
 
 ;	jump to minimal code to restart a save file.
 
-	mov	rax,minimal_rstrt
-	mov	m_word [minimal_id],rax
+	mov	w0,minimal_rstrt
+	mov	m_word [minimal_id],w0
 	call	minimal			; no return
 
 %ifdef z_trace

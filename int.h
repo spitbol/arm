@@ -25,7 +25,7 @@
 
 	%define m_real	qword	; reference to floating point value in memory
 	%define d_real	dq	; define value for floating point
-; N INCLUDE
+
 	%define	xl	rsi
 	%define xr	rdi
 	%define	xt	rsi
@@ -46,8 +46,8 @@
 
 ;	%define	cfp_b	8
 
-	%define log_cfp_b 3
-	%define log_cfp_c 3
+	%define log_cfp_b 2
+	%define log_cfp_c 2
 	%define d_real	dq
 	%define cfp_c_val	8
 	%define log_cfp_c 3
