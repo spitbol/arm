@@ -327,9 +327,9 @@ crack.end
 -stitl error(text)
 	define('error(text)')                           :(error.end)
 error
-	outfile = '* *???* ' thisline
-	outfile = '*       ' text
-.	       (ident(lasterror),'. last error was line ' lasterror)
+
+	outfile = filenami ':' input_line_no ':' 'error: ' text
+	outfile = lpad(size(filenami,size(filenami) + 4 ) ' thisline
 	lasterror = noutlines
 	noutlines = noutlines + 2
 	nerrors = nerrors + 1
